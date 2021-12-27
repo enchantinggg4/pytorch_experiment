@@ -309,4 +309,11 @@ class GymTester:
 
         # self.ga_instance.plot_result(title="PyGAD & PyTorch - Iteration vs. Fitness", linewidth=4)
 
-GymTester(50).run()
+
+def main():
+    GymTester(1500).run()
+
+if __name__ == "__main__":
+   # stuff only to run when not called via 'import' here
+   main()
+
