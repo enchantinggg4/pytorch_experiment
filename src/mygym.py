@@ -69,7 +69,6 @@ class Gym:
 
         new_x = unit.x + x_diff
         new_y = unit.y + y_diff
-
         dist = math.sqrt(x_diff ** 2 + y_diff ** 2)
 
         if self.is_out_of_bounds(new_x, new_y) or dist > unit.speed:
@@ -92,7 +91,7 @@ class Gym:
                     ai.score += 50
                 ai.score += dmg
                 opp_ai = self.right_ai if self.left_ai == ai else self.left_ai
-                opp_ai.score -= unit.damage
+                opp_ai.score -= dmg
 
 
             # here we check if enemy adjacent
@@ -193,15 +192,23 @@ class AI:
         self.score = 0
 
     def get_input(self, unit, gym):
-        i = numpy.zeros(8 * 8).reshape((8, 8))
+        unit_table = numpy.zeros(8 * 8).reshape((8, 8))
         for u in gym.left_units + gym.right_units:
             # index = u.x + u.y * gym.w
             if unit.side == u.side:
-                i[u.y][u.x] = -1
+                unit_table[u.y][u.x] = -1
             else:
-                i[u.y][u.x] = 1
+                unit_table[u.y][u.x] = 1
 
-        return i.flatten()
+        count_table = numpy.zeros(8 * 8).reshape((8, 8))
+        for u in gym.left_units + gym.right_units:
+            # index = u.x + u.y * gym.w
+            count_table[u.y][u.x] = u.count
+
+        return torch.tensor([[
+            unit_table,
+            count_table
+        ]]).float()
 
     def decide(self, unit, gym):
         # inputs
@@ -212,6 +219,7 @@ class AI:
         # we need to find in range best spot
         bw = -1
         bwi = -1
+
         for (idx, weight) in enumerate(decision):
             px, py = idx % 8, idx // 8
             dist = math.sqrt((px - unit.x) ** 2 + (py - unit.y) ** 2)
@@ -301,4 +309,4 @@ class GymTester:
 
         # self.ga_instance.plot_result(title="PyGAD & PyTorch - Iteration vs. Fitness", linewidth=4)
 
-# GymTester(2500).run()
+GymTester(50).run()

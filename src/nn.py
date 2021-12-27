@@ -4,15 +4,38 @@ import pygad.torchga
 import numpy
 
 
-def create_network(input_size, output_size, num_solutions):
-    input = torch.nn.Linear(input_size, input_size * 2)
-    h1 = torch.nn.Linear(input_size * 2, input_size)
-    r1 = torch.nn.ReLU()
-    h2 = torch.nn.Linear(input_size, input_size)
-    out = torch.nn.Linear(input_size, input_size)
-    r2 = torch.nn.Softmax()
 
-    model = torch.nn.Sequential(input, h1, r1, h2, out, r2)
+class BattleModel(torch.nn.Module):
+
+
+    def __init__(self, input_size):
+        super().__init__()
+        self.in_conv = torch.nn.Conv2d(2, 1, 1)
+        self.input = torch.nn.Linear(input_size, input_size * 2)
+        self.h1 = torch.nn.Linear(input_size * 2, input_size)
+        self.r1 = torch.nn.ReLU()
+        self.h2 = torch.nn.Linear(input_size, input_size)
+        self.out = torch.nn.Linear(input_size, input_size)
+        self.r2 = torch.nn.Softmax()
+
+    def forward(self, x):
+        x = self.in_conv(x)
+
+        x = x.view(1, -1)
+
+        x = self.input(x)
+        x = self.h1(x)
+        x = self.r1(x)
+        x = self.h2(x)
+        x = self.r2(x)
+        x = self.out(x)
+        x = self.r2(x)
+        return x.view(-1)
+
+
+
+def create_network(input_size, output_size, num_solutions):
+    model = BattleModel(input_size)
 
     return pygad.torchga.TorchGA(model=model, num_solutions=num_solutions)
 
