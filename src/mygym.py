@@ -1,4 +1,5 @@
 import random
+import sys
 
 import numpy
 import torch
@@ -232,7 +233,7 @@ class AI:
 
 def create_gym(left_ai, right_ai):
     g = Gym(8, 8, left_ai, right_ai)
-    speed = 4
+    speed = 2
     damage = 15
     health = 20
 
@@ -276,7 +277,7 @@ class GymTester:
         model = self.previous_best_model.model
         weights = pygad.torchga.model_weights_as_dict(model=model, weights_vector=self.ga_instance.best_solution()[0])
         self.previous_best_model.model.load_state_dict(weights)
-        print("%d Fitness of the best solution :" % ga_instance.generations_completed, ga_instance.best_solution()[1])
+        print("%d / %d Fitness of the best solution :" % (ga_instance.generations_completed, self.iterations), ga_instance.best_solution()[1])
 
     def fitness_func(self, solution, solution_idx):
         # random_side = bool(random.getrandbits(1))
@@ -310,10 +311,11 @@ class GymTester:
         # self.ga_instance.plot_result(title="PyGAD & PyTorch - Iteration vs. Fitness", linewidth=4)
 
 
-def main():
-    GymTester(1500).run()
+def main(iters):
+    GymTester(iters).run()
 
 if __name__ == "__main__":
    # stuff only to run when not called via 'import' here
-   main()
+   iters = int(sys.argv[1])
+   main(iters)
 

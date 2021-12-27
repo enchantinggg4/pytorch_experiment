@@ -7,7 +7,7 @@ import pygad
 
 from mygym import GymTester, create_gym, AI
 
-model = torch.load('models/50_402.pt')
+model = torch.load('models/1500_518.pt')
 
 ga = pygad.torchga.TorchGA(model = model, num_solutions=10)
 
@@ -38,7 +38,7 @@ def test(side = False):
         print('State %d' % idx)
         print(state)
         sys.stdout.flush()
-        time.sleep(0.3)
+        time.sleep(0.15)
     print('Left score: %f' % g.left_ai.score)
     print('Right score: %f' % g.right_ai.score)
     return g
