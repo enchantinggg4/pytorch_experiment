@@ -7,7 +7,7 @@ import pygad
 
 from mygym import GymTester, create_gym, AI
 
-model = torch.load('models/1500_518.pt')
+model = torch.load('models/100_1690.pt')
 
 ga = pygad.torchga.TorchGA(model = model, num_solutions=10)
 

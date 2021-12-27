@@ -37,6 +37,13 @@ class Gym:
 
         states = []
 
+        if len(self.left_units) == 0:
+            self.left_ai.score -= 100
+            self.right_ai.score += 100
+        elif len(self.right_units) == 0:
+            self.left_ai.score += 100
+            self.right_ai.score -= 100
+
         for unit in self.left_units:
             self.action(
                 self.left_ai,
@@ -239,13 +246,20 @@ def create_gym(left_ai, right_ai):
 
     min, max = 3,3
 
+    # 5 of 1's 1 of 15
+    g.left_units.append(
+        Unit(speed,damage, health, 15)
+    )
     for i in range(random.randint(min, max)):
         g.left_units.append(
-            Unit(speed, damage, health, random.randint(3, 5))
+            Unit(speed, damage, health, 1)
         )
+    g.right_units.append(
+        Unit(speed, damage, health, 15)
+    )
     for i in range(random.randint(min, max)):
         g.right_units.append(
-            Unit(speed, damage, health, random.randint(3, 5))
+            Unit(speed, damage, health, 1)
         )
     g.prepare()
     return g
